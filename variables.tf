@@ -12,11 +12,6 @@ variable "env" {
     description = "Environment name (dev, tst, poc, prd, etc)."
 }
 
-variable "admin_instance_type" {
-    type = "string"
-    default = "t2.micro"
-    description = "Instance type to use for the administrative endpoint."
-}
 
 variable "public_subnets" {
     type = "list"
@@ -26,6 +21,12 @@ variable "public_subnets" {
 variable "private_subnets" {
     type = "list"
     description = "Private subnet IDs."
+}
+
+
+variable "ssh_allowed_cidrs" {
+    type = "list"
+    description = "List of allowed CIDR's for SSH to the instances"
 }
 
 variable "key_name" {

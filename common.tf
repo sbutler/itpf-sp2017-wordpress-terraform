@@ -75,8 +75,7 @@ data "aws_iam_policy_document" "rdsmon_assume_role" {
 # Data
 # ===================================================================
 
-# Security group that will allow SSH from approved IP ranges. This set is taken
-# from the list of UIUC and UA IP subnets.
+# Security group that will allow SSH from approved IP ranges.
 #
 # https://www.terraform.io/docs/providers/aws/r/security_group.html
 resource "aws_security_group" "ssh_allowed" {
@@ -84,15 +83,6 @@ resource "aws_security_group" "ssh_allowed" {
         protocol = "tcp"
         from_port = 20
         to_port = 20
-        cidr_blocks = [
-            "128.174.0.0/16",
-            "130.126.0.0/16",
-            "192.17.0.0/16",
-            "72.36.64.0/18",
-            "64.22.176.0/20",
-            "204.93.0.0/19",
-            "141.142.0.0/16",
-            "198.17.196.0/25",
-        ]
+        cidr_blocks = [ "${var.ssh_allowed_cidrs}" ]
     }
 }

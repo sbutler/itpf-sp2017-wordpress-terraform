@@ -26,6 +26,7 @@ private_subnets = [
 
 wp_instance_type = "t2.micro"
 wp_eb_managedactions_start = "Wed:08:05"
+wp_eb_public_ip = "true"
 
 wp_db_instance_class = "db.t2.micro"
 wp_db_allocated_storage = "5"

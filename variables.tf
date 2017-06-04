@@ -146,6 +146,12 @@ variable "wp_eb_managedactions_start" {
     description = "Prefered start time for EB managed actions."
 }
 
+variable "wp_eb_public_ip" {
+    type = "string"
+    default = "false"
+    description = "Associate a public IP address with EB instances (true/false)."
+}
+
 variable "wp_auth_key" {}
 variable "wp_secure_auth_key" {}
 variable "wp_logged_in_key" {}

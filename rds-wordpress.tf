@@ -17,6 +17,7 @@ resource "aws_security_group" "wp_db" {
         security_groups = [
             "${aws_security_group.wp_instance.id}",
         ]
+        cidr_blocks = [ "${var.safe_cidrs}" ]
     }
 
     tags {
@@ -61,6 +62,7 @@ resource "aws_db_instance" "wordpress" {
     multi_az = false
     vpc_security_group_ids = [ "${aws_security_group.wp_db.id}" ]
     db_subnet_group_name = "${aws_db_subnet_group.wordpress.name}"
+    publicly_accessible = "${var.public_backend}"
 
     username = "${var.wp_db_adminuser}"
     password = "${data.aws_kms_secret.secrets.wp_db_adminpassword}"
@@ -84,6 +86,28 @@ resource "aws_db_instance" "wordpress" {
     lifecycle {
         # prevent_destroy = true
     }
+}
+
+# Provision a database, user, and grant for wordpress
+#
+# TODO: provision the database a more secure way
+#
+# https://www.terraform.io/docs/providers/mysql/r/database.html
+# https://www.terraform.io/docs/providers/mysql/r/user.html
+# https://www.terraform.io/docs/providers/mysql/r/grant.html
+resource "mysql_database" "wordpress" {
+    name = "${var.wp_db_name}"
+}
+resource "mysql_user" "wordpress" {
+    user = "${var.wp_db_user}"
+    host = "%"
+    password = "${data.aws_kms_secret.secrets.wp_db_password}"
+}
+resource "mysql_grant" "wordpress" {
+    user = "${mysql_user.wordpress.user}"
+    host = "${mysql_user.wordpress.host}"
+    database = "${mysql_database.wordpress.name}"
+    privileges = [ "ALL" ]
 }
 
 # WordPress database event subscription. This sends event to our SNS topic,

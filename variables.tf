@@ -24,9 +24,9 @@ variable "private_subnets" {
 }
 
 
-variable "ssh_allowed_cidrs" {
+variable "safe_cidrs" {
     type = "list"
-    description = "List of allowed CIDR's for SSH to the instances"
+    description = "List of allowed CIDR's for SSH and RDS connections."
 }
 
 variable "key_name" {
@@ -136,10 +136,10 @@ variable "wp_eb_managedactions_start" {
     description = "Prefered start time for EB managed actions."
 }
 
-variable "wp_eb_public_ip" {
+variable "public_backend" {
     type = "string"
     default = "false"
-    description = "Associate a public IP address with EB instances (true/false)."
+    description = "Allocate public IP's for resources that are usually private. This only works if public_subnets == private_subnets."
 }
 
 # Secrets for:

@@ -24,9 +24,9 @@ variable "private_subnets" {
 }
 
 
-variable "ssh_allowed_cidrs" {
+variable "safe_cidrs" {
     type = "list"
-    description = "List of allowed CIDR's for SSH to the instances"
+    description = "List of allowed CIDR's for SSH and RDS connections."
 }
 
 
@@ -77,6 +77,12 @@ variable "wp_db_maintenance_window" {
     type = "string"
     default = "Wed:08:05-Wed:08:59"
     description = "WP DB weekly maintenance window."
+}
+
+variable "public_backend" {
+    type = "string"
+    default = "false"
+    description = "Allocate public IP's for resources that are usually private. This only works if public_subnets == private_subnets."
 }
 
 # Secrets for:

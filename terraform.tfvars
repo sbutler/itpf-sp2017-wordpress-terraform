@@ -2,7 +2,7 @@ project = "itpf-wp"
 env = "poc"
 
 key_name = "workshop"
-ssh_allowed_cidrs = [
+safe_cidrs = [
     "128.174.0.0/16",
     "130.126.0.0/16",
     "192.17.0.0/16",
@@ -12,6 +12,7 @@ ssh_allowed_cidrs = [
     "141.142.0.0/16",
     "198.17.196.0/25",
 ]
+public_backend = "true"
 
 public_subnets = [
     "subnet-2af03143",
@@ -26,7 +27,6 @@ private_subnets = [
 
 wp_instance_type = "t2.micro"
 wp_eb_managedactions_start = "Wed:08:05"
-wp_eb_public_ip = "true"
 
 wp_db_instance_class = "db.t2.micro"
 wp_db_allocated_storage = "5"

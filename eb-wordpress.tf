@@ -15,7 +15,7 @@ resource "aws_security_group" "wp_instance" {
         protocol = "tcp"
         from_port = 22
         to_port = 22
-        cidr_blocks = [ "${var.ssh_allowed_cidrs}" ]
+        cidr_blocks = [ "${var.safe_cidrs}" ]
     }
 
     tags {

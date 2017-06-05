@@ -87,25 +87,3 @@ resource "aws_db_instance" "wordpress" {
         # prevent_destroy = true
     }
 }
-
-# Provision a database, user, and grant for wordpress
-#
-# TODO: provision the database a more secure way
-#
-# https://www.terraform.io/docs/providers/mysql/r/database.html
-# https://www.terraform.io/docs/providers/mysql/r/user.html
-# https://www.terraform.io/docs/providers/mysql/r/grant.html
-resource "mysql_database" "wordpress" {
-    name = "${var.wp_db_name}"
-}
-resource "mysql_user" "wordpress" {
-    user = "${var.wp_db_user}"
-    host = "%"
-    password = "${data.aws_kms_secret.secrets.wp_db_password}"
-}
-resource "mysql_grant" "wordpress" {
-    user = "${mysql_user.wordpress.user}"
-    host = "${mysql_user.wordpress.host}"
-    database = "${mysql_database.wordpress.name}"
-    privileges = [ "ALL" ]
-}

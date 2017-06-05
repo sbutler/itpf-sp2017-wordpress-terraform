@@ -118,20 +118,3 @@ data "aws_kms_secret" "secrets" {
     }
 
 }
-
-
-# ===================================================================
-# Resources
-# ===================================================================
-
-# Security group that will allow SSH from approved IP ranges.
-#
-# https://www.terraform.io/docs/providers/aws/r/security_group.html
-resource "aws_security_group" "ssh_allowed" {
-    ingress {
-        protocol = "tcp"
-        from_port = 20
-        to_port = 20
-        cidr_blocks = [ "${var.ssh_allowed_cidrs}" ]
-    }
-}

@@ -2,43 +2,8 @@
 # Resources
 # ===================================================================
 
-# Allow connections from the world to our ELB instance on the standard web
-# ports.
-#
-# https://www.terraform.io/docs/providers/aws/r/security_group.html
-resource "aws_security_group" "wp_elb" {
-    name_prefix = "${var.project}-${var.env}-wpelb-"
-    description = "WordPress Elastic Beanstalk Elastic Load Balancer."
-    vpc_id = "${data.aws_subnet.public.0.vpc_id}"
-
-    ingress {
-        protocol = "tcp"
-        from_port = 80
-        to_port = 80
-        cidr_blocks = [ "0.0.0.0/0" ]
-    }
-
-    ingress {
-        protocol = "tcp"
-        from_port = 443
-        to_port = 443
-        cidr_blocks = [ "0.0.0.0/0" ]
-    }
-
-    egress {
-        from_port = 0
-        to_port = 0
-        protocol = "-1"
-        cidr_blocks = [ "0.0.0.0/0" ]
-    }
-
-    tags {
-        Name = "${var.project}-${var.env}-wpelb-sg"
-    }
-}
-
-# Allow connections to our EB instances from the ELB on web ports, and from
-# campus on the SSH port.
+# Allow connections to our EB instances from SSH, and use this also to allow
+# the instances to connect to the database server.
 #
 # https://www.terraform.io/docs/providers/aws/r/security_group.html
 resource "aws_security_group" "wp_instance" {
@@ -48,27 +13,9 @@ resource "aws_security_group" "wp_instance" {
 
     ingress {
         protocol = "tcp"
-        from_port = 80
-        to_port = 80
-        security_groups = [
-            "${aws_security_group.wp_elb.id}",
-        ]
-    }
-
-    ingress {
-        protocol = "tcp"
-        from_port = 443
-        to_port = 443
-        security_groups = [
-            "${aws_security_group.wp_elb.id}",
-        ]
-    }
-
-    egress {
-        from_port = 0
-        to_port = 0
-        protocol = "-1"
-        cidr_blocks = [ "0.0.0.0/0" ]
+        from_port = 22
+        to_port = 22
+        cidr_blocks = [ "${var.ssh_allowed_cidrs}" ]
     }
 
     tags {
@@ -292,7 +239,12 @@ resource "aws_elastic_beanstalk_configuration_template" "wordpress" {
     setting {
         namespace = "aws:autoscaling:launchconfiguration"
         name = "SecurityGroups"
-        value = "${join(",", aws_security_group.wp_instance.*.id, aws_security_group.ssh_allowed.*.id)}"
+        value = "${aws_security_group.wp_instance.id}"
+    }
+    setting {
+        namespace = "aws:autoscaling:launchconfiguration"
+        name = "SSHSourceRestriction"
+        value = "tcp, 22, 22, 0.0.0.0/32"
     }
 
 
@@ -403,14 +355,6 @@ resource "aws_elastic_beanstalk_configuration_template" "wordpress" {
         namespace = "aws:elasticbeanstalk:sns:topics"
         name = "Notification Topic ARN"
         value = "${aws_sns_topic.eb_wordpress.arn}"
-    }
-
-
-    # ==== ELB Load Balancer ====
-    setting {
-        namespace = "aws:elb:loadbalancer"
-        name = "SecurityGroups"
-        value = "${join(",", aws_security_group.wp_elb.*.id)}"
     }
 }
 

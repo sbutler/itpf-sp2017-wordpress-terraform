@@ -33,27 +33,10 @@ resource "aws_db_subnet_group" "wordpress" {
     subnet_ids = [ "${data.aws_subnet.private.*.id}" ]
 }
 
-# IAM Role and Policy for database monitoring.
-#
-# https://www.terraform.io/docs/providers/aws/r/iam_role.html
-# https://www.terraform.io/docs/providers/aws/r/iam_role_policy_attachment.html
-resource "aws_iam_role" "rds_wordpress_monitor" {
-    name_prefix = "${var.project}-${var.env}-role-"
-    description = "WordPress Database enhanced monitoring role."
-
-    assume_role_policy = "${data.aws_iam_policy_document.rdsmon_assume_role.json}"
-}
-resource "aws_iam_role_policy_attachment" "rds_wordpress_monitor" {
-    role = "${aws_iam_role.rds_wordpress_monitor.name}"
-    policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonRDSEnhancedMonitoringRole"
-}
-
 # WordPress shared database instance.
 #
 # https://www.terraform.io/docs/providers/aws/r/db_instance.html
 resource "aws_db_instance" "wordpress" {
-    depends_on = [ "aws_iam_role_policy_attachment.rds_wordpress_monitor" ]
-
     identifier = "${var.project}-${var.env}-wpdb"
     instance_class = "${var.wp_db_instance_class}"
     engine = "mariadb"
@@ -74,9 +57,6 @@ resource "aws_db_instance" "wordpress" {
     auto_minor_version_upgrade = true
     allow_major_version_upgrade = false
 
-    monitoring_role_arn = "${aws_iam_role.rds_wordpress_monitor.arn}"
-    monitoring_interval = 30
-
     final_snapshot_identifier = "${var.project}-${var.env}-wpdb-final"
 
     # TODO: remove apply_immediately and uncomment prevent_destroy
@@ -84,28 +64,4 @@ resource "aws_db_instance" "wordpress" {
     lifecycle {
         # prevent_destroy = true
     }
-}
-
-# WordPress database event subscription. This sends event to our SNS topic,
-# which optionally then emails us or triggers other actions.
-#
-# https://www.terraform.io/docs/providers/aws/r/db_event_subscription.html
-resource "aws_db_event_subscription" "wordpress" {
-    name = "${var.project}-${var.env}-wpdb-events"
-    sns_topic = "${aws_sns_topic.eb_wordpress.arn}"
-
-    source_type = "db-instance"
-    source_ids = [ "${aws_db_instance.wordpress.id}" ]
-
-    event_categories = [
-        "availability",
-        "deletion",
-        "failover",
-        "failure",
-        "low storage",
-        "maintenance",
-        "notification",
-        "recovery",
-        "restoration",
-    ]
 }

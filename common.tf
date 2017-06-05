@@ -83,38 +83,4 @@ data "aws_kms_secret" "secrets" {
         name = "wp_db_password"
         payload = "${var.secrets["wp_db_password"]}"
     }
-
-    secret {
-        name = "wp_auth_key"
-        payload = "${var.secrets["wp_auth_key"]}"
-    }
-    secret {
-        name = "wp_secure_auth_key"
-        payload = "${var.secrets["wp_secure_auth_key"]}"
-    }
-    secret {
-        name = "wp_logged_in_key"
-        payload = "${var.secrets["wp_logged_in_key"]}"
-    }
-    secret {
-        name = "wp_nonce_key"
-        payload = "${var.secrets["wp_nonce_key"]}"
-    }
-    secret {
-        name = "wp_auth_salt"
-        payload = "${var.secrets["wp_auth_salt"]}"
-    }
-    secret {
-        name = "wp_secure_auth_salt"
-        payload = "${var.secrets["wp_secure_auth_salt"]}"
-    }
-    secret {
-        name = "wp_logged_in_salt"
-        payload = "${var.secrets["wp_logged_in_salt"]}"
-    }
-    secret {
-        name = "wp_nonce_salt"
-        payload = "${var.secrets["wp_nonce_salt"]}"
-    }
-
 }

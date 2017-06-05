@@ -72,7 +72,7 @@ data "aws_iam_policy_document" "rdsmon_assume_role" {
 
 
 # ===================================================================
-# Data
+# Resources
 # ===================================================================
 
 # Security group that will allow SSH from approved IP ranges.

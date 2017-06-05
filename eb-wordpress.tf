@@ -23,14 +23,6 @@ resource "aws_security_group" "wp_instance" {
     }
 }
 
-# This is the SNS topic where all alarms, RDS, and EB post notifications to.
-# Subscribe to this in order to get emails about your service.
-#
-# https://www.terraform.io/docs/providers/aws/r/sns_topic.html
-resource "aws_sns_topic" "eb_wordpress" {
-    name = "${var.project}-${var.env}-wpenv-notifications"
-}
-
 # IAM Role, Policy, and Profile for the EB instances. This doesn't provide
 # anything for our app, but is required for EB to work.
 #
@@ -347,14 +339,6 @@ resource "aws_elastic_beanstalk_configuration_template" "wordpress" {
         namespace = "aws:elasticbeanstalk:managedactions:platformupdate"
         name = "UpdateLevel"
         value = "minor"
-    }
-
-
-    # ==== Elastic Beanstalk SNS Topics ====
-    setting {
-        namespace = "aws:elasticbeanstalk:sns:topics"
-        name = "Notification Topic ARN"
-        value = "${aws_sns_topic.eb_wordpress.arn}"
     }
 }
 

@@ -86,6 +86,10 @@ resource "aws_db_instance" "wordpress" {
     lifecycle {
         # prevent_destroy = true
     }
+
+    provisioner "local-exec" {
+        command = "./scripts/provision-mysql.sh -h '${self.endpoint}' -u '${self.username}' -p '${self.password}' '${var.wp_db_name}' '${var.wp_db_user}' '${data.aws_kms_secret.secrets.wp_db_password}'"
+    }
 }
 
 # WordPress database event subscription. This sends event to our SNS topic,

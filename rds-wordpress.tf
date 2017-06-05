@@ -86,6 +86,10 @@ resource "aws_db_instance" "wordpress" {
     lifecycle {
         # prevent_destroy = true
     }
+
+    provisioner "local-exec" {
+        command = "./scripts/provision-mysql.sh -h '${self.address}' -u '${self.username}' -p '${self.password}' '${var.wp_db_name}' '${var.wp_db_user}' '${data.aws_kms_secret.secrets.wp_db_password}'"
+    }
 }
 
 # Provision a database, user, and grant for wordpress

@@ -70,6 +70,55 @@ data "aws_iam_policy_document" "rdsmon_assume_role" {
     }
 }
 
+# Decrypt secrets using the AWS KMS system. You should specify the encypted
+# values in the "secrets" map variable and they will be available here.
+#
+# https://www.terraform.io/docs/providers/aws/d/kms_secret.html
+data "aws_kms_secret" "secrets" {
+    secret {
+        name = "wp_db_adminpassword"
+        payload = "${var.secrets["wp_db_adminpassword"]}"
+    }
+    secret {
+        name = "wp_db_password"
+        payload = "${var.secrets["wp_db_password"]}"
+    }
+
+    secret {
+        name = "wp_auth_key"
+        payload = "${var.secrets["wp_auth_key"]}"
+    }
+    secret {
+        name = "wp_secure_auth_key"
+        payload = "${var.secrets["wp_secure_auth_key"]}"
+    }
+    secret {
+        name = "wp_logged_in_key"
+        payload = "${var.secrets["wp_logged_in_key"]}"
+    }
+    secret {
+        name = "wp_nonce_key"
+        payload = "${var.secrets["wp_nonce_key"]}"
+    }
+    secret {
+        name = "wp_auth_salt"
+        payload = "${var.secrets["wp_auth_salt"]}"
+    }
+    secret {
+        name = "wp_secure_auth_salt"
+        payload = "${var.secrets["wp_secure_auth_salt"]}"
+    }
+    secret {
+        name = "wp_logged_in_salt"
+        payload = "${var.secrets["wp_logged_in_salt"]}"
+    }
+    secret {
+        name = "wp_nonce_salt"
+        payload = "${var.secrets["wp_nonce_salt"]}"
+    }
+
+}
+
 
 # ===================================================================
 # Resources

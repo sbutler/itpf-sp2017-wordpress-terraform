@@ -182,7 +182,7 @@ resource "aws_elastic_beanstalk_configuration_template" "wordpress" {
     setting {
         namespace = "aws:elasticbeanstalk:application:environment"
         name = "WP_DB_PASSWORD"
-        value = "${var.wp_db_password}"
+        value = "${data.aws_kms_secret.secrets.wp_db_password}"
     }
     setting {
         namespace = "aws:elasticbeanstalk:application:environment"
@@ -193,42 +193,42 @@ resource "aws_elastic_beanstalk_configuration_template" "wordpress" {
     setting {
         namespace = "aws:elasticbeanstalk:application:environment"
         name = "WP_AUTH_KEY"
-        value = "${var.wp_auth_key}"
+        value = "${data.aws_kms_secret.secrets.wp_auth_key}"
     }
     setting {
         namespace = "aws:elasticbeanstalk:application:environment"
         name = "WP_SECURE_AUTH_KEY"
-        value = "${var.wp_secure_auth_key}"
+        value = "${data.aws_kms_secret.secrets.wp_secure_auth_key}"
     }
     setting {
         namespace = "aws:elasticbeanstalk:application:environment"
         name = "WP_LOGGED_IN_KEY"
-        value = "${var.wp_logged_in_key}"
+        value = "${data.aws_kms_secret.secrets.wp_logged_in_key}"
     }
     setting {
         namespace = "aws:elasticbeanstalk:application:environment"
         name = "WP_NONCE_KEY"
-        value = "${var.wp_nonce_key}"
+        value = "${data.aws_kms_secret.secrets.wp_nonce_key}"
     }
     setting {
         namespace = "aws:elasticbeanstalk:application:environment"
         name = "WP_AUTH_SALT"
-        value = "${var.wp_auth_salt}"
+        value = "${data.aws_kms_secret.secrets.wp_auth_salt}"
     }
     setting {
         namespace = "aws:elasticbeanstalk:application:environment"
         name = "WP_SECURE_AUTH_SALT"
-        value = "${var.wp_secure_auth_salt}"
+        value = "${data.aws_kms_secret.secrets.wp_secure_auth_salt}"
     }
     setting {
         namespace = "aws:elasticbeanstalk:application:environment"
         name = "WP_LOGGED_IN_SALT"
-        value = "${var.wp_logged_in_salt}"
+        value = "${data.aws_kms_secret.secrets.wp_logged_in_salt}"
     }
     setting {
         namespace = "aws:elasticbeanstalk:application:environment"
         name = "WP_NONCE_SALT"
-        value = "${var.wp_nonce_salt}"
+        value = "${data.aws_kms_secret.secrets.wp_nonce_salt}"
     }
 
 

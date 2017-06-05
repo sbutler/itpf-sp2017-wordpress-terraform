@@ -70,7 +70,7 @@ resource "aws_db_instance" "wordpress" {
     db_subnet_group_name = "${aws_db_subnet_group.wordpress.name}"
 
     username = "${var.wp_db_adminuser}"
-    password = "${var.wp_db_adminpassword}"
+    password = "${data.aws_kms_secret.secrets.wp_db_adminpassword}"
 
     allocated_storage = "${var.wp_db_allocated_storage}"
     storage_type = "gp2"

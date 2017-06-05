@@ -37,7 +37,7 @@ variable "key_name" {
 
 variable "wp_solution_stack" {
     type = "string"
-    default = "64bit Amazon Linux 2016.09 v2.3.3 running PHP 5.6"
+    default = "64bit Amazon Linux 2017.03 v2.4.0 running PHP 5.6"
     description = "WordPress Elastic Beanstalk solution stack."
 }
 
@@ -79,19 +79,9 @@ variable "wp_db_adminuser" {
     description = "WordPress DB master user."
 }
 
-variable "wp_db_adminpassword" {
-    type = "string"
-    description = "WordPress DB master password."
-}
-
 variable "wp_db_user" {
     type = "string"
     description = "WordPress DB app user."
-}
-
-variable "wp_db_password" {
-    type = "string"
-    description = "WordPress DB app password."
 }
 
 variable "wp_db_connection_max" {
@@ -152,11 +142,19 @@ variable "wp_eb_public_ip" {
     description = "Associate a public IP address with EB instances (true/false)."
 }
 
-variable "wp_auth_key" {}
-variable "wp_secure_auth_key" {}
-variable "wp_logged_in_key" {}
-variable "wp_nonce_key" {}
-variable "wp_auth_salt" {}
-variable "wp_secure_auth_salt" {}
-variable "wp_logged_in_salt" {}
-variable "wp_nonce_salt" {}
+# Secrets for:
+#   wp_db_adminpassword
+#   wp_db_password
+#
+#   wp_auth_key
+#   wp_secure_auth_key
+#   wp_logged_in_key
+#   wp_nonce_key
+#   wp_auth_salt
+#   wp_secure_auth_salt
+#   wp_logged_in_salt
+#   wp_nonce_salt
+variable "secrets" {
+    type = "map"
+    description = "A map of all the encrypted secrets used in this configuration."
+}

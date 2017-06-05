@@ -91,27 +91,3 @@ resource "aws_db_instance" "wordpress" {
         command = "./scripts/provision-mysql.sh -h '${self.address}' -u '${self.username}' -p '${self.password}' '${var.wp_db_name}' '${var.wp_db_user}' '${data.aws_kms_secret.secrets.wp_db_password}'"
     }
 }
-
-# WordPress database event subscription. This sends event to our SNS topic,
-# which optionally then emails us or triggers other actions.
-#
-# https://www.terraform.io/docs/providers/aws/r/db_event_subscription.html
-resource "aws_db_event_subscription" "wordpress" {
-    name = "${var.project}-${var.env}-wpdb-events"
-    sns_topic = "${aws_sns_topic.eb_wordpress.arn}"
-
-    source_type = "db-instance"
-    source_ids = [ "${aws_db_instance.wordpress.id}" ]
-
-    event_categories = [
-        "availability",
-        "deletion",
-        "failover",
-        "failure",
-        "low storage",
-        "maintenance",
-        "notification",
-        "recovery",
-        "restoration",
-    ]
-}

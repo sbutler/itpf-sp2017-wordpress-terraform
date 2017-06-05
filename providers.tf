@@ -22,16 +22,6 @@ provider "aws" {
     region = "us-east-2"
 }
 
-# Configure the MySQL provider based on the outcome of creating the
-# aws_db_instance.
-#
-# https://www.terraform.io/docs/providers/mysql/index.html
-provider "mysql" {
-    endpoint = "${aws_db_instance.wordpress.endpoint}"
-    username = "${aws_db_instance.wordpress.username}"
-    password = "${aws_db_instance.wordpress.password}"
-}
-
 
 # ===================================================================
 # Data

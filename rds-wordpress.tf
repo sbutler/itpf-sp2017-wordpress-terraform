@@ -33,10 +33,27 @@ resource "aws_db_subnet_group" "wordpress" {
     subnet_ids = [ "${data.aws_subnet.private.*.id}" ]
 }
 
+# IAM Role and Policy for database monitoring.
+#
+# https://www.terraform.io/docs/providers/aws/r/iam_role.html
+# https://www.terraform.io/docs/providers/aws/r/iam_role_policy_attachment.html
+resource "aws_iam_role" "rds_wordpress_monitor" {
+    name_prefix = "${var.project}-${var.env}-role-"
+    description = "WordPress Database enhanced monitoring role."
+
+    assume_role_policy = "${data.aws_iam_policy_document.rdsmon_assume_role.json}"
+}
+resource "aws_iam_role_policy_attachment" "rds_wordpress_monitor" {
+    role = "${aws_iam_role.rds_wordpress_monitor.name}"
+    policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonRDSEnhancedMonitoringRole"
+}
+
 # WordPress shared database instance.
 #
 # https://www.terraform.io/docs/providers/aws/r/db_instance.html
 resource "aws_db_instance" "wordpress" {
+    depends_on = [ "aws_iam_role_policy_attachment.rds_wordpress_monitor" ]
+
     identifier = "${var.project}-${var.env}-wpdb"
     instance_class = "${var.wp_db_instance_class}"
     engine = "mariadb"
@@ -56,6 +73,9 @@ resource "aws_db_instance" "wordpress" {
     maintenance_window = "${var.wp_db_maintenance_window}"
     auto_minor_version_upgrade = true
     allow_major_version_upgrade = false
+
+    monitoring_role_arn = "${aws_iam_role.rds_wordpress_monitor.arn}"
+    monitoring_interval = 30
 
     final_snapshot_identifier = "${var.project}-${var.env}-wpdb-final"
 

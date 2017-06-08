@@ -26,6 +26,9 @@ private_subnets = [
 ]
 
 wp_instance_type = "t2.micro"
+wp_solution_stack = "64bit Amazon Linux 2017.03 v2.4.0 running PHP 5.6"
+wp_asg_min_size = "1"
+wp_asg_max_size = "2"
 wp_eb_managedactions_start = "Wed:08:05"
 
 wp_db_instance_class = "db.t2.micro"
@@ -33,11 +36,15 @@ wp_db_allocated_storage = "5"
 wp_db_name = "wordpress"
 wp_db_adminuser = "itpf_wp_admin"
 wp_db_user = "wordpress"
+wp_db_connection_max = "100"
 
 wp_db_backup_window = "05:05-05:59"
 wp_db_backup_retention = "7"
 
 wp_db_maintenance_window = "Wed:08:05-Wed:08:59"
+
+wp_content_burstcredit_min = "1000000000000"
+wp_content_iolimit_avg = "85"
 
 wp_home_url = "changeme"
 wp_site_url = "changeme"

@@ -8,7 +8,7 @@
 resource "aws_security_group" "wp_db" {
     name_prefix = "${var.project}-${var.env}-wpdb-"
     description = "WordPress DB."
-    vpc_id = "${data.aws_subnet.private.0.vpc_id}"
+    vpc_id = "${var.public_backend == "true" ? data.aws_subnet.public.0.vpc_id : data.aws_subnet.private.0.vpc_id}"
 
     ingress {
         protocol = "tcp"
@@ -31,7 +31,7 @@ resource "aws_security_group" "wp_db" {
 resource "aws_db_subnet_group" "wordpress" {
     name = "${var.project}-${var.env}-wp"
     description = "WordPress DB subnet group."
-    subnet_ids = [ "${data.aws_subnet.private.*.id}" ]
+    subnet_ids = [ "${split(",", var.public_backend == "true" ? join(",", data.aws_subnet.public.*.id) : join(",", data.aws_subnet.private.*.id))}" ]
 }
 
 # IAM Role and Policy for database monitoring.

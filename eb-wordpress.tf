@@ -257,7 +257,7 @@ resource "aws_elastic_beanstalk_configuration_template" "wordpress" {
     setting {
         namespace = "aws:ec2:vpc"
         name = "Subnets"
-        value = "${join(",", data.aws_subnet.private.*.id)}"
+        value = "${var.public_backend == "true" ? join(",", data.aws_subnet.public.*.id) : join(",", data.aws_subnet.private.*.id)}"
     }
     setting {
         namespace = "aws:ec2:vpc"

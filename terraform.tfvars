@@ -12,7 +12,7 @@ safe_cidrs = [
     "141.142.0.0/16",
     "198.17.196.0/25",
 ]
-public_backend = "true"
+#public_backend = "true"
 
 public_subnets = [
     "subnet-2af03143",
@@ -20,9 +20,9 @@ public_subnets = [
     "subnet-b6af9dfc",
 ]
 private_subnets = [
-    "subnet-2af03143",
-    "subnet-735b470b",
-    "subnet-b6af9dfc",
+    "subnet-3a750453",
+    "subnet-1e51ee65",
+    "subnet-1bff3056",
 ]
 
 wp_instance_type = "t2.micro"

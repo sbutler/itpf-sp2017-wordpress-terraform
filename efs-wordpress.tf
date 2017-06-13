@@ -39,9 +39,8 @@ resource "aws_efs_file_system" "wpcontent" {
         Name = "${var.project}-${var.env}-wpcontent"
     }
 
-    # TODO: uncomment prevent_destroy
     lifecycle {
-        #prevent_destroy = true
+        prevent_destroy = true
     }
 }
 # https://www.terraform.io/docs/providers/aws/r/efs_mount_target.html

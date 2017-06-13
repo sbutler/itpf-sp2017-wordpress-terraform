@@ -81,10 +81,9 @@ resource "aws_db_instance" "wordpress" {
 
     final_snapshot_identifier = "${var.project}-${var.env}-wpdb-final"
 
-    # TODO: remove apply_immediately and uncomment prevent_destroy
-    apply_immediately = true
+    # apply_immediately = true
     lifecycle {
-        # prevent_destroy = true
+        prevent_destroy = true
     }
 
     provisioner "local-exec" {
